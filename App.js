@@ -1,36 +1,65 @@
-import * as React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
-
-const instructions = Platform.select({
-  ios: `Press Cmd+R to reload,\nCmd+D or shake for dev menu`,
-  android: `Double tap R on your keyboard to reload,\nShake or press menu button for dev menu`,
-});
-
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.welcome}>Welcome to React Native!</Text>
-      <Text style={styles.instructions}>To get started, edit App.js</Text>
-      <Text style={styles.instructions}>{instructions}</Text>
-    </View>
-  );
-}
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
 const styles = StyleSheet.create({
+  buttonCircle: {
+    borderRadius: 30,
+    width: '100%',
+    padding: 20,
+  },
+  textButton: {
+    textAlign: 'center',
+    fontSize: 35,
+    textAlignVertical: 'center',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+  }
 });
+
+const App = () => {
+  const [color, setColor] = useState('white');
+  const [run, setRun] = useState(false)
+  const [intervalID, setIntervalID] = useState('Go Crazy !')
+
+  const setRandomColor = () => {
+    let letters = '0123456789ABCDEF';
+    let colorize = '#';
+    for (let i = 0; i < 6; i++) {
+       colorize += letters[Math.floor(Math.random() * 16)];
+     }
+    setColor(colorize)
+  }
+    
+  const crazyColor = () => { 
+    setRun(true)
+    setIntervalID(setInterval(() => { setRandomColor() }, 100));
+  }
+
+  const stop = () => { 
+    clearInterval(intervalID) 
+    setColor('white')
+    setRun(false)
+  }
+
+  return (
+      <View style={{height: "100%", backgroundColor: color, display: "flex", justifyContent: "center", alignItems: "center"}} >
+        <View>
+          {!run && 
+            <TouchableOpacity style={[styles.buttonCircle, {backgroundColor: "darkslateblue"}]} onPress={crazyColor}>
+              <Text style={styles.textButton, {color: "white"}}>GO CRAZY !</Text>
+            </TouchableOpacity>
+          }
+          {run && 
+            <TouchableOpacity style={[styles.buttonCircle, {backgroundColor: "white"}]} onPress={stop}>
+              <Text style={styles.textButton, {color: "black"}}>OMG PLEASE STOP</Text>
+            </TouchableOpacity>
+          }
+        </View>
+      </View>
+  )
+}
+
+export default App;
